@@ -10,7 +10,7 @@ import Foundation
 
 extension Zip {
     
-    //MARK: Quick Unzip
+    // MARK: Quick Unzip
     
     /**
      Quick unzip a file. Unzips to a new folder inside the app's documents folder with the zip file's name.
@@ -37,7 +37,7 @@ extension Zip {
      
      - returns: NSURL of the destination folder.
      */
-    public class func quickUnzipFile(path: NSURL, progress: ((progress: Double) -> ())?) throws -> NSURL {
+    public class func quickUnzipFile(path: NSURL, progress: ((progress: Double) -> Void)?) throws -> NSURL {
         let fileManager = NSFileManager.defaultManager()
         guard let fileExtension = path.pathExtension, let fileName = path.lastPathComponent else {
             throw ZipError.UnzipFail
@@ -49,7 +49,7 @@ extension Zip {
         return destinationUrl!
     }
     
-    //MARK: Quick Zip
+    // MARK: Quick Zip
     
     /**
      Quick zip files.
@@ -80,7 +80,7 @@ extension Zip {
      
      - returns: NSURL of the destination folder.
      */
-    public class func quickZipFiles(paths: [NSURL], fileName: String, progress: ((progress: Double) -> ())?) throws -> NSURL {
+    public class func quickZipFiles(paths: [NSURL], fileName: String, progress: ((progress: Double) -> Void)?) throws -> NSURL {
         let fileManager = NSFileManager.defaultManager()
         let documentsUrl = fileManager.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as NSURL
         let destinationUrl = documentsUrl.URLByAppendingPathComponent("\(fileName).zip")

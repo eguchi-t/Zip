@@ -1,0 +1,18 @@
+disabled_rules:
+  - file_length
+  - line_length
+  - cyclomatic_complexity
+  - function_body_length
+  - nesting
+  - trailing_whitespace
+  - type_body_length
+  - variable_name
+  - type_name
+  - opening_brace
+  - force_try
+  - vertical_whitespace
+  - unused_closure_parameter
+excluded:
+  - Carthage
+  - Pods
+custom_rules:

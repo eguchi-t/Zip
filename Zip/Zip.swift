@@ -39,9 +39,7 @@ public class Zip {
     // MARK: Lifecycle
     
     /**
-     Init
-     
-     - returns: Zip object
+     Init     
      */
     public init () {
     }
@@ -62,7 +60,7 @@ public class Zip {
      - notes: Supports implicit progress composition
      */
     
-    public class func unzipFile(zipFilePath: NSURL, destination: NSURL, overwrite: Bool, password: String?, progress: ((progress: Double) -> ())?) throws {
+    public class func unzipFile(zipFilePath: NSURL, destination: NSURL, overwrite: Bool, password: String?, progress: ((progress: Double) -> Void)?) throws {
         
         // File manager
         let fileManager = NSFileManager.defaultManager()
@@ -79,7 +77,7 @@ public class Zip {
         var ret: Int32 = 0
         var crc_ret: Int32 = 0
         let bufferSize: UInt32 = 4096
-        var buffer = Array<CUnsignedChar>(count: Int(bufferSize), repeatedValue: 0)
+        var buffer = [CUnsignedChar](count: Int(bufferSize), repeatedValue: 0)
         
         // Progress handler set up
         var totalSize: Double = 0.0
@@ -105,9 +103,8 @@ public class Zip {
         repeat {
             if let cPassword = password?.cStringUsingEncoding(NSASCIIStringEncoding) {
                 ret = unzOpenCurrentFilePassword(zip, cPassword)
-            }
-            else {
-                ret = unzOpenCurrentFile(zip);
+            } else {
+                ret = unzOpenCurrentFile(zip)
             }
             if ret != UNZ_OK {
                 throw ZipError.UnzipFail
@@ -132,8 +129,8 @@ public class Zip {
             }
             var isDirectory = false
             let fileInfoSizeFileName = Int(fileInfo.size_filename-1)
-            if (fileName[fileInfoSizeFileName] == "/".cStringUsingEncoding(NSUTF8StringEncoding)?.first || fileName[fileInfoSizeFileName] == "\\".cStringUsingEncoding(NSUTF8StringEncoding)?.first) {
-                isDirectory = true;
+            if fileName[fileInfoSizeFileName] == "/".cStringUsingEncoding(NSUTF8StringEncoding)?.first || fileName[fileInfoSizeFileName] == "\\".cStringUsingEncoding(NSUTF8StringEncoding)?.first {
+                isDirectory = true
             }
             free(fileName)
             if pathString.rangeOfCharacterFromSet(NSCharacterSet(charactersInString: "/\\")) != nil {
@@ -147,8 +144,7 @@ public class Zip {
             do {
                 if isDirectory {
                     try fileManager.createDirectoryAtPath(fullPath, withIntermediateDirectories: true, attributes: directoryAttributes)
-                }
-                else {
+                } else {
                     let parentDirectory = (fullPath as NSString).stringByDeletingLastPathComponent
                     try fileManager.createDirectoryAtPath(parentDirectory, withIntermediateDirectories: true, attributes: directoryAttributes)
                 }
@@ -163,8 +159,7 @@ public class Zip {
                 let readBytes = unzReadCurrentFile(zip, &buffer, bufferSize)
                 if readBytes > 0 {
                     fwrite(buffer, Int(readBytes), 1, filePointer)
-                }
-                else {
+                } else {
                     break
                 }
             }
@@ -207,7 +202,7 @@ public class Zip {
      
      - notes: Supports implicit progress composition
      */
-    public class func zipFiles(paths: [NSURL], zipFilePath: NSURL, password: String?, progress: ((progress: Double) -> ())?) throws {
+    public class func zipFiles(paths: [NSURL], zipFilePath: NSURL, password: String?, progress: ((progress: Double) -> Void)?) throws {
         
         // File manager
         let fileManager = NSFileManager.defaultManager()
@@ -235,8 +230,7 @@ public class Zip {
                 if let fileSize = fileSize {
                     totalSize += fileSize
                 }
-            }
-            catch {}
+            } catch {}
         }
         
         let progressTracker = NSProgress(totalUnitCount: Int64(totalSize))
@@ -271,20 +265,17 @@ public class Zip {
                     if let fileSize = fileAttributes[NSFileSize] as? Double {
                         currentPosition += fileSize
                     }
-                }
-                catch {}
+                } catch {}
                 let buffer = malloc(chunkSize)
                 if let password = password, let fileName = fileName {
-                    zipOpenNewFileInZip3(zip, fileName, &zipInfo, nil, 0, nil, 0, nil,Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password, 0)
-                }
-                else if let fileName = fileName {
-                    zipOpenNewFileInZip3(zip, fileName, &zipInfo, nil, 0, nil, 0, nil,Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, nil, 0)
-                }
-                else {
+                    zipOpenNewFileInZip3(zip, fileName, &zipInfo, nil, 0, nil, 0, nil, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, password, 0)
+                } else if let fileName = fileName {
+                    zipOpenNewFileInZip3(zip, fileName, &zipInfo, nil, 0, nil, 0, nil, Z_DEFLATED, Z_DEFAULT_COMPRESSION, 0, -MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY, nil, 0)
+                } else {
                     throw ZipError.ZipFail
                 }
                 var length: Int = 0
-                while (feof(input) == 0) {
+                while feof(input) == 0 {
                     length = fread(buffer, 1, chunkSize, input)
                     zipWriteInFileInZip(zip, buffer, UInt32(length))
                 }

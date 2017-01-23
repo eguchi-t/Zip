@@ -23,14 +23,13 @@ internal class ZipUtilities {
         func filePath() -> String {
             if let filePath = filePathURL.path {
                 return filePath
-            }
-            else {
+            } else {
                 return String()
             }
         }
     }
     
-    //MARK: Path processing
+    // MARK: Path processing
     
     /**
     Process zip paths
@@ -50,8 +49,7 @@ internal class ZipUtilities {
             if !isDirectory {
                 let processedPath = ProcessedFilePath(filePathURL: path, fileName: path.lastPathComponent)
                 processedFilePaths.append(processedPath)
-            }
-            else {
+            } else {
                 let directoryContents = expandDirectoryFilePath(path)
                 processedFilePaths.appendContentsOf(directoryContents)
             }
@@ -81,8 +79,7 @@ internal class ZipUtilities {
                     let fileName = (directoryName as NSString).stringByAppendingPathComponent(filePathComponent)
                     let processedPath = ProcessedFilePath(filePathURL: path!, fileName: fileName)
                     processedFilePaths.append(processedPath)
-                }
-                else {
+                } else {
                     let directoryContents = expandDirectoryFilePath(path!)
                     processedFilePaths.appendContentsOf(directoryContents)
                 }
