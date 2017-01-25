@@ -18,4 +18,4 @@ script: ./build.sh $MODE
 # whitelist
 branches:
   only:
-    - master
+    - swift2.3
