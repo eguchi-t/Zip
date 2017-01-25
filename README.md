@@ -1,6 +1,6 @@
 ![Zip - Zip and unzip files in Swift](https://cloud.githubusercontent.com/assets/889949/12374908/252373d0-bcac-11e5-8ece-6933aeae8222.png)
 
-[![Build Status](https://travis-ci.org/eguchi-t/Zip.svg?branch=master)](https://travis-ci.org/eguchi-t/Zip) [![Version](http://img.shields.io/cocoapods/v/Zip.svg)](http://cocoapods.org/?q=Zip)
+[![Build Status](https://travis-ci.org/eguchi-t/Zip.svg?branch=swift2.3)](https://travis-ci.org/eguchi-t/Zip) [![Version](http://img.shields.io/cocoapods/v/Zip.svg)](http://cocoapods.org/?q=Zip)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 # Zip
